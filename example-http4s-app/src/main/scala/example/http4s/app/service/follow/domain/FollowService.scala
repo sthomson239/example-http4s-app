@@ -11,7 +11,7 @@ class FollowService[F[_]](repository: FollowRepositoryAlgebra[F], validation: Fo
 
   def create(follow: Follow)(implicit M: Monad[F]): EitherT[F, FollowValidationError, Follow] =
     for {
-      _ <- validation.userExists(follow.followerId) >> validation.userExists(follow.followedId)
+      _ <- validation.exists(follow.followerId) >> validation.exists(follow.followedId)
       _ <- validation.followDoesNotExist(follow)
       createdFollow <- EitherT.liftF(repository.create(follow))
     } yield createdFollow
@@ -21,9 +21,6 @@ class FollowService[F[_]](repository: FollowRepositoryAlgebra[F], validation: Fo
 
   def allFollowedPosts(userId: Long): F[List[Post]] =
     repository.getPosts(userId)
-
-  def unfollowAll(userId: Long)(implicit F: Functor[F]): F[Unit] =
-    repository.deleteAll(userId).as(())
 
 }
 

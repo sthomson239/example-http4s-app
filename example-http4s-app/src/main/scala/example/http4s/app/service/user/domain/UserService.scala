@@ -25,5 +25,13 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
   def deleteUser(userId: Long)(implicit F: Functor[F]): F[Unit] =
     repository.delete(userId).as(())
 
+  def findByUsername(username: String)(implicit F: Functor[F]): EitherT[F, UserNotFound.type, User] = EitherT {
+    repository.findByUsername(username).map {
+      case Some(user) =>
+        Right(user)
+      case _ =>
+        Left(UserNotFound)
+    }
+  }
 
 }

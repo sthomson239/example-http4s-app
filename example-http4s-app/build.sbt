@@ -16,6 +16,8 @@ val scalaTestPlusVersion = "3.2.2.0"
 val flywayVersion = "7.15.0"
 val circeConfigVersion = "0.8.0"
 val postgresVersion = "42.2.19"
+val oauthJwtVersion   = "3.15.0"
+val TsecVersion = "0.2.1"
 
 libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-core" % catsVersion,
@@ -38,6 +40,14 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % scalaCheckVersion % Test,
   "org.scalatest" %% "scalatest" % scalaTestVersion % Test,
   "org.scalatestplus" %% "scalacheck-1-14" % scalaTestPlusVersion % Test,
+  "io.github.jmcardon" %% "tsec-common" % TsecVersion,
+  "io.github.jmcardon" %% "tsec-password" % TsecVersion,
+  "io.github.jmcardon" %% "tsec-mac" % TsecVersion,
+  "io.github.jmcardon" %% "tsec-signatures" % TsecVersion,
+  "io.github.jmcardon" %% "tsec-jwt-mac" % TsecVersion,
+  "io.github.jmcardon" %% "tsec-jwt-sig" % TsecVersion,
+  "io.github.jmcardon" %% "tsec-http4s" % TsecVersion,
+  "com.auth0"               %  "java-jwt"               % oauthJwtVersion,
 )
 
 addCompilerPlugin("org.typelevel" %% "kind-projector" % kindProjectorVersion cross CrossVersion.full)

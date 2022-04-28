@@ -6,16 +6,20 @@ import cats.syntax.all._
 import doobie._
 import doobie.implicits._
 import example.http4s.app.service.user.domain.User
+import io.circe.parser.decode
+import io.circe.syntax._
 
 object UserSQL {
+  implicit val roleMeta: Meta[Role] =
+    Meta[String].imap(decode[Role](_).leftMap(throw _).merge)(_.asJson.toString)
 
   def insert(user: User): Update0 = sql"""
-    INSERT INTO USERS (USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_HASH)
-    VALUES (${user.username}, ${user.firstName}, ${user.lastName}, ${user.email}, ${user.passwordHash})
+    INSERT INTO USERS (USERNAME, FIRST_NAME, LAST_NAME, EMAIL, ROLE, PASSWORD_HASH)
+    VALUES (${user.username}, ${user.firstName}, ${user.lastName}, ${user.email},${user.role} ,${user.passwordHash})
   """.update
 
   def select(userId: Long): Query0[User] = sql"""
-    SELECT ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_HASH
+    SELECT ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, ROLE, PASSWORD_HASH
     FROM USERS
     WHERE ID = $userId
   """.query
@@ -25,7 +29,7 @@ object UserSQL {
   """.update
 
   def selectByUsername(username: String): Query0[User] = sql"""
-    SELECT ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_HASH
+    SELECT ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, ROLE, PASSWORD_HASH
     FROM USERS
     WHERE USERNAME = $username
   """.query

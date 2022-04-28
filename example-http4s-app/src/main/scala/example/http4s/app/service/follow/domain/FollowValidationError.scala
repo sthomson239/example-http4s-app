@@ -1,6 +1,6 @@
 package example.http4s.app.service.follow.domain
 
-sealed trait FollowValidationError extends Product with Serializable
+trait FollowValidationError extends Product with Serializable
 case object UserNotFound extends FollowValidationError
 case object FollowNotFound extends FollowValidationError
 case object AlreadyFollowing extends FollowValidationError
